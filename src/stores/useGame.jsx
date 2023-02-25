@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
+const random = (min, max) => Math.floor(Math.random() * (max - min)) + min;
+
 export default create(
   subscribeWithSelector((set) => {
     return {

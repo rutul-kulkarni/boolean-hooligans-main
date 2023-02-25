@@ -1,11 +1,21 @@
 import { useState } from "react";
 import { Box } from "@mui/system";
 import Typical from "react-typical";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import InfoIcon from "@mui/icons-material/Info";
+import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import { Card, CardContent, Grid, Typography } from "@mui/material";
 import { AnimationWrapper } from "react-hover-animation";
 import { useNavigate } from "react-router-dom";
+import "./styles.css";
 
 const menu_options = ["Instructions", "Play", "Leaderboard"];
+
+const CardIcon = {
+  Instructions: <InfoIcon fontSize="large" />,
+  Play: <PlayArrowIcon fontSize="large" />,
+  Leaderboard: <LeaderboardIcon fontSize="large" />,
+};
 
 const CustomCard = ({ type, onCardClick }) => (
   <Card
@@ -22,9 +32,17 @@ const CustomCard = ({ type, onCardClick }) => (
       height="100%"
     >
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          {type}
-        </Typography>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          className="header"
+        >
+          {CardIcon[type]}
+          <Typography gutterBottom fontSize={20}>
+            {type}
+          </Typography>
+        </Box>
       </CardContent>
     </Box>
   </Card>
