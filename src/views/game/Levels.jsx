@@ -294,7 +294,7 @@ export function Levels({
   const blocks = useMemo(() => {
     const blocks = [];
     eventType = events[Math.floor(Math.random() * events.length)];
-    let obstacleCount = eventType === "High" ? 12 : eventType === "Mid" ? 8 : 5;
+    let obstacleCount = eventType === "High" ? 10 : eventType === "Mid" ? 7 : 5;
 
     for (let i = 0; i < obstacleCount; i++) {
       const type = types[Math.floor(Math.random() * types.length)];
