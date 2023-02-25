@@ -18,31 +18,41 @@ const floor2Material = new THREE.MeshStandardMaterial({
   metalness: 0,
   roughness: 0,
 });
-const obstacleMaterial = new THREE.MeshStandardMaterial({
-  color: "#ff0000",
-  metalness: 0,
-  roughness: 1,
-});
 const wallMaterial = new THREE.MeshStandardMaterial({
   color: "#887777",
   metalness: 0,
   roughness: 0,
 });
 
-function BlockStart({ position = [0, 0, 0] }) {
+const colorSelector = (eventType) =>
+  eventType === "High"
+    ? "#ff0000"
+    : eventType === "Mid"
+    ? "#FFA500"
+    : "#AAFF00";
+
+function BlockStart({ position = [0, 0, 0], eventType }) {
+  let message =
+    eventType === "High"
+      ? "You should not invest today!"
+      : eventType === "Mid"
+      ? "You can invest today!"
+      : "You must invest today!";
+
   return (
     <group position={position}>
       <Float floatIntensity={0.25} rotationIntensity={0.25}>
         <Text
           font="./bebas-neue-v9-latin-regular.woff"
-          scale={0.5}
-          maxWidth={0.25}
-          lineHeight={0.75}
+          scale={0.15}
+          maxWidth={0.8}
+          lineHeight={1}
           textAlign="right"
+          color={colorSelector(eventType)}
           position={[0.75, 0.65, 0]}
           rotation-y={-0.25}
         >
-          Marble Race
+          {message}
           <meshBasicMaterial toneMapped={false} />
         </Text>
       </Float>
@@ -96,11 +106,17 @@ function BlockEnd({ position = [0, 0, 0] }) {
   );
 }
 
-export function BlockSpinner({ position = [0, 0, 0] }) {
+export function BlockSpinner({ position = [0, 0, 0], eventType }) {
   const obstacle = useRef();
   const [speed] = useState(
     () => (Math.random() + 0.2) * (Math.random() < 0.5 ? -1 : 1)
   );
+
+  const obstacleMaterial = new THREE.MeshStandardMaterial({
+    color: colorSelector(eventType),
+    metalness: 0,
+    roughness: 1,
+  });
 
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
@@ -137,9 +153,15 @@ export function BlockSpinner({ position = [0, 0, 0] }) {
   );
 }
 
-export function BlockLimbo({ position = [0, 0, 0] }) {
+export function BlockLimbo({ position = [0, 0, 0], eventType }) {
   const obstacle = useRef();
   const [timeOffset] = useState(() => Math.random() * Math.PI * 2);
+
+  const obstacleMaterial = new THREE.MeshStandardMaterial({
+    color: colorSelector(eventType),
+    metalness: 0,
+    roughness: 1,
+  });
 
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
@@ -179,9 +201,15 @@ export function BlockLimbo({ position = [0, 0, 0] }) {
   );
 }
 
-export function BlockAxe({ position = [0, 0, 0] }) {
+export function BlockAxe({ position = [0, 0, 0], eventType }) {
   const obstacle = useRef();
   const [timeOffset] = useState(() => Math.random() * Math.PI * 2);
+
+  const obstacleMaterial = new THREE.MeshStandardMaterial({
+    color: colorSelector(eventType),
+    metalness: 0,
+    roughness: 1,
+  });
 
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
@@ -262,9 +290,10 @@ export function Levels({
   seed = 0,
   events = ["Low", "Mid", "High"],
 }) {
+  let eventType = "";
   const blocks = useMemo(() => {
     const blocks = [];
-    const eventType = events[Math.floor(Math.random() * events.length)];
+    eventType = events[Math.floor(Math.random() * events.length)];
     let obstacleCount = eventType === "High" ? 10 : eventType === "Mid" ? 7 : 3;
 
     for (let i = 0; i < obstacleCount; i++) {
@@ -278,10 +307,14 @@ export function Levels({
 
   return (
     <>
-      <BlockStart position={[0, 0, 0]} />
+      <BlockStart position={[0, 0, 0]} eventType={eventType} />
 
       {blocks.map((Block, index) => (
-        <Block key={index} position={[0, 0, -(index + 1) * 4]} />
+        <Block
+          key={index}
+          position={[0, 0, -(index + 1) * 4]}
+          eventType={eventType}
+        />
       ))}
 
       <BlockEnd position={[0, 0, -(count + 1) * 4]} />
